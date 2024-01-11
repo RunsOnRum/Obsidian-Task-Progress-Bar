@@ -1,3 +1,6 @@
+:root {
+	--bar-width: 100px;
+}
 /* Set Default Progress Bar For Plugin */
 .cm-task-progress-bar {
 	display: inline-block;
@@ -9,13 +12,14 @@
 .HyperMD-header .cm-task-progress-bar {
 	display: inline-block;
 	position: relative;
-	margin-left: 5px;
+	margin-left: 15px;
+	margin-right: 15px;
 	margin-bottom: 5px;
 }
 
 .progress-bar-inline {
-	border-radius: 10px;
-	height: 8px;
+	border-radius: 14px;
+	height: 10px;
 }
 
 .progress-bar-inline-0 {
@@ -45,7 +49,7 @@
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
-	width: 85px;
+	width: var(--bar-width);
 }
 
 /* Set Default Progress Bar With Number For Plugin */
@@ -59,10 +63,12 @@
 	margin-bottom: 5px;
 }
 
+.progress-status {
+	padding-left: 5px;
+}
 
 .cm-task-progress-bar.with-number .progress-bar-inline-background {
 	margin-bottom: -2px;
-	width: 42px;
 }
 
 .cm-task-progress-bar.with-number .progress-status {

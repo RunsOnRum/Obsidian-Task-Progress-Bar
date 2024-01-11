@@ -84,17 +84,24 @@ class TaskProgressBarWidget extends WidgetType {
 	}
 
 	changeNumber() {
+		const percentage = Math.round(this.completed / this.total * 10000) / 100;
 		if (this.plugin?.settings.addNumberToProgressBar) {
 			this.numberEl = this.progressBarEl.createEl('div', {
 				cls: 'progress-status',
 				text: `[${ this.completed }/${ this.total }]`
 			});
 		}
+		if (this.plugin?.settings.addPercentageToProgressBar) {
+			this.numberEl = this.progressBarEl.createEl('div', {
+				cls: 'progress-status',
+				text: `${ percentage }%`
+			});
+		}
 		this.numberEl.innerText = `[${ this.completed }/${ this.total }]`;
 	}
 
 	toDOM() {
-		if (!this.plugin?.settings.addNumberToProgressBar && this.numberEl !== undefined) this.numberEl.detach();
+		if (!this.plugin?.settings.addNumberToProgressBar && !this.plugin?.settings.addPercentageToProgressBar && this.numberEl !== undefined) this.numberEl.detach();
 
 		if (this.progressBarEl !== undefined) {
 			this.changePercentage();
@@ -103,16 +110,25 @@ class TaskProgressBarWidget extends WidgetType {
 		}
 
 		this.progressBarEl = createSpan(this.plugin?.settings.addNumberToProgressBar ? 'cm-task-progress-bar with-number' : 'cm-task-progress-bar');
+		this.progressBarEl = createSpan(this.plugin?.settings.addPercentageToProgressBar ? 'cm-task-progress-bar with-number' : 'cm-task-progress-bar');
 		this.progressBackGroundEl = this.progressBarEl.createEl('div', { cls: 'progress-bar-inline-background' });
+		//this.progressBackGroundEl.classList.add('bar-width')
+		this.progressBackGroundEl.style.setProperty('--bar-width', this.plugin?.settings.progressBarWidth + 'px')
 		this.progressEl = this.progressBackGroundEl.createEl('div');
 
+		const percentage = Math.round(this.completed / this.total * 10000) / 100;
 		if (this.plugin?.settings.addNumberToProgressBar && this.total) {
 			this.numberEl = this.progressBarEl.createEl('div', {
 				cls: 'progress-status',
 				text: `[${ this.completed }/${ this.total }]`
 			});
 		}
-
+		if (this.plugin?.settings.addPercentageToProgressBar && this.total) {
+			this.numberEl = this.progressBarEl.createEl('div', {
+				cls: 'progress-status',
+				text: `${ percentage }%`
+			});
+		}
 		this.changePercentage();
 
 		return this.progressBarEl;

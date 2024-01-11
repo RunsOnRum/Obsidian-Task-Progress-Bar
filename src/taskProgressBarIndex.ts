@@ -3,7 +3,9 @@ import { taskProgressBarExtension } from './taskProgressBarWidget';
 
 interface TaskProgressBarSettings {
 	addTaskProgressBarToHeading: boolean;
+	progressBarWidth: string;
 	addNumberToProgressBar: boolean;
+	addPercentageToProgressBar: boolean;
 	allowAlternateTaskStatus: boolean;
 	alternativeMarks: string;
 	countSubLevel: boolean;
@@ -11,7 +13,9 @@ interface TaskProgressBarSettings {
 
 const DEFAULT_SETTINGS: TaskProgressBarSettings = {
 	addTaskProgressBarToHeading: false,
+	progressBarWidth: '100',
 	addNumberToProgressBar: false,
+	addPercentageToProgressBar: false,
 	allowAlternateTaskStatus: false,
 	alternativeMarks: '(x|X|-)',
 	countSubLevel: true,
@@ -74,6 +78,23 @@ class TaskProgressBarSettingTab extends PluginSettingTab {
 					this.applySettingsUpdate();
 				}));
 
+			new Setting(containerEl)
+			.setName('Progress Bar Width')
+			.setDesc('Set the width of the progress bar, in pixels')
+			.addText((text) =>
+				text
+					.setPlaceholder(DEFAULT_SETTINGS.progressBarWidth)
+					.setValue(this.plugin.settings.progressBarWidth)
+					.onChange(async (value) => {
+						if (value.length === 0 || !value.match(/^\d+$/)) {
+							this.plugin.settings.progressBarWidth = DEFAULT_SETTINGS.progressBarWidth;
+						} else {
+							this.plugin.settings.progressBarWidth = value;
+						}
+						this.applySettingsUpdate();
+					}),
+			);
+
 		new Setting(containerEl)
 			.setName('Add number to the Progress Bar')
 			.setDesc('Toggle this to allow this plugin to add tasks number to progress bar.')
@@ -82,6 +103,15 @@ class TaskProgressBarSettingTab extends PluginSettingTab {
 					this.plugin.settings.addNumberToProgressBar = value;
 					this.applySettingsUpdate();
 				}));
+
+		new Setting(containerEl)
+		.setName('Add Percentage to the Progress Bar')
+		.setDesc('Toggle this to allow this plugin to add tasks percentage to progress bar.')
+		.addToggle((toggle) =>
+			toggle.setValue(this.plugin.settings.addPercentageToProgressBar).onChange(async (value) => {
+				this.plugin.settings.addPercentageToProgressBar = value;
+				this.applySettingsUpdate();
+			}));
 
 		new Setting(containerEl)
 			.setName('Only count children of current Task')
